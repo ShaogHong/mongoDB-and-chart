@@ -10,7 +10,7 @@ app = Flask(__name__)
 CORS(app)
 
 
-# 所有城市的查询
+# 查询所有城市
 # http://127.0.0.1:5000/get_city_names
 @app.route('/get_city_names', methods=['GET'])
 def get_city_names():

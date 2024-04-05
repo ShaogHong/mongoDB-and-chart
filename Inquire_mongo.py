@@ -1,7 +1,5 @@
 import json
-
 from pymongo import MongoClient
-
 
 # 连接数据库
 def connect_db():
@@ -9,7 +7,6 @@ def connect_db():
     db = client['tian_qi']
     collection = db['tianQi_data']
     return collection
-
 
 # 查询某个城市的数据函数
 def query_city_data(cityname):
@@ -39,13 +36,10 @@ def query_city_data(cityname):
 
     return data
 
-
 # print(query_city_data('北京'))
 # 只保留winddirect字段的数据
 # result = query_city_data('北京')
 # winddirects = result['winddirect']
-
-
 # print(winddirects)
 
 # 查询温度的函数
@@ -59,9 +53,6 @@ def query_temperature(cityname):
 
 # print(query_temperature('北京'))
 
-
-
-
 # 查询指定城市代码
 def query_code(cityname):
     result = query_city_data(cityname)
@@ -70,7 +61,6 @@ def query_code(cityname):
         'citycode': citycode
     }
     return citycode_data
-
 
 def all_citycode_and_name():
     collection = connect_db()
@@ -83,10 +73,7 @@ def all_citycode_and_name():
 
     return data
 
-
 # print(all_citycode_and_name())
-
-
 # 查询湿度的函数
 def query_humidity(cityname):
     result = query_city_data(cityname)
@@ -96,10 +83,9 @@ def query_humidity(cityname):
     }
     return humidity_data
 
-
 # print(query_humidity('北京'))
 
-# 查询风力的函数
+# 查询风级的函数
 def query_winddirect(cityname):
     result = query_city_data(cityname)
     winddirect = result['winddirect']
@@ -107,7 +93,6 @@ def query_winddirect(cityname):
         'winddirect': winddirect
     }
     return winddirect_data
-
 
 # print(query_winddirect('北京'))
 # 查询更新时间
@@ -119,15 +104,13 @@ def query_updatetime(cityname):
     }
     return updatetime_data
 
-
 # print(query_updatetime('北京'))
 
 # 查询所有城市
 def all_cityname():
     collection = connect_db()
-    # distinct()方法返回集合中所有不重复的元素
+    # distinct()不重复的元素
     city_names = collection.distinct('cityname')
-
     return city_names
 
 def all_phenomena():
@@ -135,6 +118,5 @@ def all_phenomena():
     phenomena = collection.find({}, {'phenomena': 1, '_id': 0})  # 返回所有现象，包括重复
     phenomena_list = [doc['phenomena'] for doc in phenomena]
     json_data = json.dumps({"phenomena": phenomena_list})
-
     return json_data
 # print(all_phenomena())
