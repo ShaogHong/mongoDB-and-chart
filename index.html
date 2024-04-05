@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>城市气温变化图</title>
+<style>
+  body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f7f7f7;
+  }
+  h1 {
+
+    text-align: center;
+  }
+
+  #city-select {
+    padding: 10px;
+    margin-bottom: 50px;
+    border-radius: 2px;
+    border: 1px solid hsl(0, 0%, 87%);
+    text-align: left; /* 设置对齐 */
+    float: left;
+}
+  #chart-container {
+    position: relative;
+    margin: auto;
+    height: 40vh;
+    width: 80vw;
+    border: 2px solid rgb(194, 193, 193);
+  }
+
+  #kuo_zhan {
+    position: relative;
+    margin: auto;
+    height: 40vh;
+    width: 80vw;
+    border: 2px solid rgb(194, 193, 193);
+}
+#info {
+    padding: 10px;
+    margin-bottom: 50px;
+    border-radius: 2px;
+    border: 1px solid hsl(0, 0%, 87%);
+    float: left;
+    /* display: inline-block; 自适应内容大小 */
+}
+.container {
+    align-items: center; /* 垂直居中 */
+    height: 100vh; /* 可根据需要调整父容器高度 */
+}
+
+</style>
+  <script src="/js/chart.js"></script>
+</head>
+<body>
+  <h1>城市气温变化图</h1>
+<div class="container">
+  <div>
+    <!-- 下拉框用于选择城市 -->
+    <div>
+      <select id="city-select">
+      <!-- 城市选项将通过JavaScript动态填充api为: -->
+      </select>
+    </div>
+    <div>
+      <!-- 图表容器，其中的canvas用于渲染图表 -->
+      <div id="chart-container">
+        <canvas id="weatherChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+<h1>城市湿度变化图</h1>
+  <div>
+      <!-- 左边的信息栏 -->
+    <div id="info">
+      <a style="font-size: 1.5em; margin-bottom: 20px;" href="https://github.com/ShaogHong?tab=overview&from=2024-04-01&to=2024-04-05" target="_blank">Github</a><br>
+      <a style="font-size: 1.2em;" href="https://zzhanzhang.top" target="_blank">博客</a><br>
+        <a style="font-size: 1.2em;" href="http://localhost:63342/py_mongoDB_work/phenomena.html" target="_blank"><b>天气概览</b>></a>
+    </div>
+
+      <!-- 扩展区域 -->
+      <div id="kuo_zhan">
+        <canvas id="humidityChart"></canvas>
+
+      </div>
+  </div>
+</div>
+
+<script>
+// 定义全局变量以便可以销毁旧图表实例
+var weatherChart;
+var humidityChart;
+
+fetch('http://127.0.0.1:5000/get_all_citycode_and_name')
+  .then(response => response.json())
+  .then(data => {
+    const select = document.getElementById('city-select');
+    data.info.forEach(city => {
+      const option = document.createElement('option');
+      option.value = String(city.citycode);
+      option.textContent = city.cityname;
+      select.appendChild(option);
+    });
+  });
+
+document.getElementById('city-select').addEventListener('change', function() {
+  const citycode = this.value;
+  const apiUrl = `http://127.0.0.1:5000/weather/${citycode}`;
+
+  fetch(apiUrl)
+    .then(response => response.json())
+    .then(data => {
+      const weatherLabels = [];
+      const weatherData = [];
+      const humidityLabels = [];
+      const humidityData = [];
+
+      data.history.forEach(entry => {
+        if (entry.updatetime && entry.humidity) {
+          weatherLabels.push(entry.updatetime);
+          weatherData.push(entry.temperature);
+          humidityLabels.push(entry.updatetime);
+          humidityData.push(entry.humidity);
+        }
+      });
+
+      if (weatherChart) {
+        weatherChart.destroy();
+      }
+      if (humidityChart) {
+        humidityChart.destroy();
+      }
+
+      const weatherCtx = document.getElementById('weatherChart').getContext('2d');
+      weatherChart = new Chart(weatherCtx, {
+        type: 'line',
+        data: {
+          labels: weatherLabels,
+          datasets: [{
+            label: '气温 (°C)',
+            data: weatherData,
+            fill: false,
+            borderColor: 'blue',
+            tension: 0.1
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: false
+            }
+          },
+          responsive: true,
+          maintainAspectRatio: false
+        }
+      });
+
+      const humidityCtx = document.getElementById('humidityChart').getContext('2d');
+      humidityChart = new Chart(humidityCtx, {
+        type: 'line',
+        data: {
+          labels: humidityLabels,
+          datasets: [{
+            label: '湿度',
+            data: humidityData,
+            fill: false,
+            borderColor: 'green',
+            tension: 0.1
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          },
+          responsive: true,
+          maintainAspectRatio: false
+        }
+      });
+    });
+});
+</script>
+
+</body>
+</html>
