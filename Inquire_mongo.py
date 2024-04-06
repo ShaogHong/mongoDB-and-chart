@@ -92,13 +92,16 @@ def all_cityname():
     city_names = collection.distinct('cityname')
     return city_names
 
-# 查询所有现象
+# 查询所有天气
+# db.tianQi_data.find({ phenomena: { $exists: true } }, { phenomena: 1, _id: 0 })
 def all_phenomena():
     collection = connect_db()
     phenomena = collection.find({}, {'phenomena': 1, '_id': 0})
     phenomena_list = [doc['phenomena'] for doc in phenomena]
-    json_data = json.dumps({"phenomena": phenomena_list})
-    return json_data
+    json_data = json.dumps(phenomena_list)
+    decoded_data = json.loads(json_data)
+    return decoded_data
+# print(all_phenomena())
 
 # 查询所有城市代码和名称
 def all_citycode_and_name():
