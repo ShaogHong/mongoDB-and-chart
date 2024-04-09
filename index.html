@@ -135,7 +135,7 @@ document.getElementById('city-select').addEventListener('change', function() {
       if (humidityChart) {
         humidityChart.destroy();
       }
-
+<!-- 可视化湿度js代码-->
       const weatherCtx = document.getElementById('weatherChart').getContext('2d');
       weatherChart = new Chart(weatherCtx, {
         type: 'line',

@@ -9,6 +9,12 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
+"""
+Flask是一个轻量级的Python Web框架，
+适用于构建简单的Web应用程序和API。它适合用于小型项目、
+原型设计或需要快速搭建的应用。Flask提供了灵活的扩展性，
+可以根据需要添加各种功能。
+"""
 
 # 查询所有城市
 # http://127.0.0.1:5000/get_city_names

@@ -99,7 +99,6 @@ mongod -dbpath "D:\mongoDB_Install\mongodb-win32-x86_64-windows-7.0.7\data\db" -
 ![](./all_img/导入csv2.png)
 
 
-
 ## 创建python项目操作mongoDB查询等
 详见项目.py文件[README.md](./README.md)
 

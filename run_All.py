@@ -4,6 +4,11 @@
 @Author  ：娄南湘先生
 @Date    ：2024/4/5,0005 0:36 
 """
+
+"""
+运行的时候注意控制台的输出
+在日志信息中，前端每一次刷新或者每一次调用api调用都会打印出来
+"""
 import subprocess
 import webbrowser
 

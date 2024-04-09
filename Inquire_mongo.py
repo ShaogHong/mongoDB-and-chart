@@ -13,7 +13,7 @@ def connect_db():
 # 查询某个城市的数据函数
 def query_city_data(cityname):
     collection = connect_db()
-
+    # 字段存入到字典中，数字1表示有返回值；
     projection = {'phenomena': 1, 'citycode': 1, 'winddirect': 1, 'humidity': 1, 'temperature': 1, 'updatetime': 1}
     results = collection.find({'cityname': cityname}, projection)
 
